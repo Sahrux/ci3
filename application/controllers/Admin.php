@@ -18,7 +18,7 @@ class Admin extends CI_Controller {
 			$config['base_url'] = base_url().'/Admin/';
 			$config['total_rows'] = $this->vb->num_rows();
 			$config['per_page'] = 3;
-			$config['num_links'] = 3;
+			$config['num_links'] = 2;
 			$config['use_page_numbers'] = TRUE;
 			$config['full_tag_open'] = '<div><ul class="pagination">';
 			$config['full_tag_close'] = '</ul></div><!--pagination-->';
@@ -65,7 +65,7 @@ class Admin extends CI_Controller {
 		$this->form_validation->set_message('required','%s inputunu doldurun..!!');
 		$this->form_validation->set_message('max_length','%s inputu max 12 simvol olmalidir..!!');
 		$this->form_validation->set_message('valid_email','Duzgun email daxil edin..!!');
-		$this->form_validation->set_message('matches','Daxil etdiyiniz sifreler eynilik teski etmir..!!');
+		$this->form_validation->set_message('matches','Daxil etdiyiniz sifreler eynilik teskil etmir..!!');
 		if ($this->form_validation->run()) {
 		$fname=$this->input->post('fname');
 		$lname=$this->input->post('lname');
@@ -77,11 +77,18 @@ class Admin extends CI_Controller {
 			'email'=>$email,
 			'password'=>md5($password)
 		);
-		$this->vb->register($data);
-		redirect('Admin');		
-	}else{
+		$result=$this->vb->register($data);
+		if($result){
+			redirect('Admin');	
+			}
+			else{
+			echo "Elave edilmedi";
+			}	
+		}
+		else
+		{
 		echo "Inputlari duzgun doldurun";
-	}
+		}
 }
 
 	/*public function gotoedit($id){
@@ -105,10 +112,12 @@ class Admin extends CI_Controller {
 			$id=$this->input->post('editedid');
 			$fname=$this->input->post('modfname');
 			$lname=$this->input->post('modlname');
+			$status=$this->input->post('status');
 			$password=$this->input->post('password');
 			$data=array(
 			'fname'=>$fname,
 			'lname'=>$lname,
+			'status'=>$status,
 			'password'=>md5($password)
 		);
 			$update=$this->vb->edit($data,$id);
@@ -126,6 +135,20 @@ class Admin extends CI_Controller {
 
 
 	}
+	public function switch(){
+		$id=$this->input->post('id');
+		$status=$this->input->post('status');
+		if ($status) {
+			$sts=1;
+		}else{
+			$sts=0;
+		}
+		$data=array(
+			'status'=>$sts
+		);
+		echo $update=$this->vb->edit($data,$id);
+
+	}
 	public function delete(){
 		$id=$this->input->post('deletedid');
 		$result=$this->vb->deleterow($id);
@@ -134,7 +157,7 @@ class Admin extends CI_Controller {
 		redirect('Admin/');
 
 	}else{
-		redirect('Girish/');
+		redirect('Admin/');
 	}
 		}else{
 			echo "Problem yarandi";

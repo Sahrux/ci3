@@ -29,11 +29,13 @@ class Qeydiyyat extends CI_Controller
 		$fname=$this->input->post('fname');
 		$lname=$this->input->post('lname');
 		$email=$this->input->post('email');
+		$status=0;
 		$password=$this->input->post('password');
 		$data=array(
 			'fname'=>$fname,
 			'lname'=>$lname,
 			'email'=>$email,
+			'status'=>$status,
 			'password'=>md5($password)
 		);
 		$this->vb->register($data);
